@@ -20,6 +20,21 @@ var application = {
     },
 
     /**
+     * @type {string|null}
+     */
+    currentCalendarMonthKey: null,
+
+    /**
+     * @type {number}
+     */
+    calendarAvailabilityToken: 0,
+
+    /**
+     * @type {Object<string, {days: Object, token: number, pending: number}>}
+     */
+    calendarAvailabilityCache: {},
+
+    /**
      * @type {Date}
      */
     today: null,
@@ -190,6 +205,8 @@ var application = {
             $('.sidebar .calendar').remove();
         }
 
+        this.currentCalendarMonthKey = null;
+
         let calendar = $('<div />').addClass('calendar');
         $('.sidebar .nav .content').prepend(calendar);
 
@@ -198,10 +215,119 @@ var application = {
             sundayFirst: moment.localeData().firstDayOfWeek() == 0,
             startDate: this.today,
             years: (this.now.getFullYear() - 3) + "-" + this.now.getFullYear(),
+            onReady: function(date){
+                $this.updateCalendarAvailability(date);
+            },
             onClick: function(date){
                 $this.historyGetDay(new Date(date));
             }
         });
+    },
+
+    updateCalendarAvailability: function(calendarDate){
+        let $this = this;
+        let month = moment.isMoment(calendarDate) ? calendarDate.clone() : moment(calendarDate);
+
+        if(!month.isValid()){
+            return;
+        }
+
+        let monthKey = month.format('YYYY-MM');
+        this.currentCalendarMonthKey = monthKey;
+
+        let daysInMonth = month.daysInMonth();
+        let monthStart = month.clone().startOf('month');
+        let monthEnd = month.clone().endOf('month').endOf('day');
+        let now = moment();
+        let endTime = monthEnd.isAfter(now) ? now.valueOf() : monthEnd.valueOf();
+
+        let dayCells = {};
+        $('.sidebar .calendar .ic__days .ic__day').each(function(){
+            let dayNum = parseInt($(this).text(), 10);
+            if(!isNaN(dayNum)){
+                dayCells[dayNum] = $(this);
+            }
+        });
+
+        $('.sidebar .calendar .ic__days .ic__day').addClass('ic__day_state_disabled');
+
+        let $calendarContainer = $('.sidebar .calendar .ic__container');
+        $calendarContainer.addClass('ic__loading');
+
+        let applyDaysToCells = function(){
+            $.each(cached.days, function(dayNum){
+                if(dayCells[dayNum]){
+                    dayCells[dayNum].removeClass('ic__day_state_disabled');
+                }
+            });
+        };
+
+        let cached = this.calendarAvailabilityCache[monthKey];
+        if(cached && cached.loading){
+            delete this.calendarAvailabilityCache[monthKey];
+            cached = null;
+        }
+        if(cached){
+            applyDaysToCells();
+            if(cached.loading){
+                cached.callbacks.push(function(){
+                    applyDaysToCells();
+                    $calendarContainer.removeClass('ic__loading');
+                });
+            } else {
+                $calendarContainer.removeClass('ic__loading');
+            }
+            return;
+        }
+
+        this.calendarAvailabilityToken += 1;
+        let token = this.calendarAvailabilityToken;
+
+        cached = {
+            days: {},
+            token: token,
+            loading: true,
+            callbacks: []
+        };
+        this.calendarAvailabilityCache[monthKey] = cached;
+
+        let fetchBatch = function(batchEndTime){
+            chrome.history.search({
+                text: '',
+                startTime: monthStart.valueOf(),
+                endTime: batchEndTime,
+                maxResults: 10000
+            }, function(results){
+                if($this.calendarAvailabilityToken !== token || $this.currentCalendarMonthKey !== monthKey){
+                    return;
+                }
+
+                if(results && results.length){
+                    $.each(results, function(_, entry){
+                        let itemDate = new Date(entry.lastVisitTime);
+                        if(itemDate.getFullYear() === month.year() && itemDate.getMonth() === month.month()){
+                            cached.days[itemDate.getDate()] = true;
+                        }
+                    });
+
+                    let lastVisitTime = results[results.length - 1].lastVisitTime;
+                    if(results.length === 10000 && lastVisitTime > monthStart.valueOf()){
+                        fetchBatch(lastVisitTime - 1);
+                        return;
+                    }
+                }
+
+                cached.loading = false;
+                applyDaysToCells();
+                $calendarContainer.removeClass('ic__loading');
+                $.each(cached.callbacks, function(_, cb){
+                    cb();
+                });
+                cached.callbacks = [];
+            });
+        };
+
+        fetchBatch(endTime);
     },
 
     /**

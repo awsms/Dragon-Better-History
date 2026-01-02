@@ -187,6 +187,11 @@
         color: @text-grey-color-dark;
     }
 
+    .ic__container.ic__loading:after {
+        border-color: lighten(@border-color-dark, 5%);
+        border-top-color: @link-text-color-dark;
+    }
+
     .ic__days td {
         border: 1px solid @border-color-dark;
         color: @text-color-dark;
@@ -198,6 +203,13 @@
 
     .ic__days .ic__day:hover {
         background: darken(@link-text-color-dark, 30%);
+    }
+
+    .ic__days .ic__day_state_disabled {
+        background: darken(@border-color-dark, 6%);
+        color: @text-grey-color-dark;
+        cursor: default;
+        pointer-events: none;
     }
 
     .ic__days .ic__day-empty {
