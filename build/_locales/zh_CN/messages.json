@@ -64,6 +64,9 @@
     "options_display_time_before_title": {
         "message": "时间显示在标题之前"
     },
+    "options_show_visit_count": {
+        "message": "显示访问次数"
+    },
     "options_popup_nb_items": {
         "message": "弹出窗口中的项目数"
     }

@@ -15,7 +15,8 @@ var application = {
     options: {
         use24HoursFormat: true,
         timeBeforeTitle: false,
-        popupNbItems: 10
+        popupNbItems: 10,
+        showVisitCount: false
     },
 
     /**
@@ -73,6 +74,7 @@ var application = {
             $this.options.use24HoursFormat = items.use24HoursFormat === undefined ? true : items.use24HoursFormat;
             $this.options.timeBeforeTitle = items.timeBeforeTitle === undefined ? false : items.timeBeforeTitle;
             $this.options.popupNbItems = items.popupNbItems === undefined ? 10 : items.popupNbItems;
+            $this.options.showVisitCount = items.showVisitCount === undefined ? false : items.showVisitCount;
 
             if($('body.popup').length){
                 $this.initPopup();
@@ -387,6 +389,9 @@ var application = {
             html+= '<div class="entry-time">' + moment(new Date(entry.lastVisitTime)).format(this.options.use24HoursFormat ? 'HH:mm' : 'hh:mm A') + '</div>';
         }
 
+        if(this.options.showVisitCount && entry.visitCount && entry.visitCount > 1){
+            html+= '<div class="entry-visit-count">' + entry.visitCount + '</div>';
+        }
         html+= '<a class="entry-remove" title="' + chrome.i18n.getMessage('history_remove_single') + '"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15" width="12px" height="12px" slot="before"><path d="M14.1016 1.60156L8.20312 7.5L14.1016 13.3984L13.3984 14.1016L7.5 8.20312L1.60156 14.1016L0.898438 13.3984L6.79688 7.5L0.898438 1.60156L1.60156 0.898438L7.5 6.79688L13.3984 0.898438L14.1016 1.60156Z"></path></svg></a>';
         html+= '</div>';
 
@@ -600,6 +605,7 @@ var application = {
         $('#options_field_24hoursformat').prop('checked', this.options.use24HoursFormat);
         $('#options_field_displaytitlebeforetime').prop('checked', this.options.timeBeforeTitle);
         $('#options_field_popupnbitems').val(this.options.popupNbItems);
+        $('#options_field_showvisitcount').prop('checked', this.options.showVisitCount);
         $('#modal_options').css('display', 'flex');
     },
 
@@ -626,7 +632,8 @@ var application = {
         chrome.storage.sync.set({
             use24HoursFormat: $('#options_field_24hoursformat').prop('checked'),
             timeBeforeTitle: $('#options_field_displaytitlebeforetime').prop('checked'),
-            popupNbItems: $('#options_field_popupnbitems').val()
+            popupNbItems: $('#options_field_popupnbitems').val(),
+            showVisitCount: $('#options_field_showvisitcount').prop('checked')
         }, function(){
             $this.closeOptions(true);
         });

@@ -28,7 +28,7 @@ body {
         text-decoration: none;
         color: @link-text-color;
 
-        &:hover{
+        &:hover {
             border-bottom: 2px solid @link-text-color;
             cursor: pointer;
         }
@@ -71,7 +71,7 @@ body {
         margin-bottom: 5px;
         background-color: @panel-background-color;
         border-radius: 4px;
-        box-shadow: 0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11);
+        box-shadow: 0 1.6px 3.6px rgba(0, 0, 0, 0.13), 0 0.3px 0.9px rgba(0, 0, 0, 0.11);
 
         &:last-child {
             margin-bottom: 0;
@@ -85,7 +85,8 @@ body {
         .entry-icon,
         .entry-time,
         .entry-link,
-        .entry-remove {
+        .entry-remove,
+        .entry-visit-count {
             display: inline-block;
             vertical-align: middle;
         }
@@ -140,6 +141,21 @@ body {
                 background-color: @backgound-color;
                 border-radius: 2px;
             }
+        }
+
+        .entry-visit-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            padding: 0 6px;
+            border-radius: 999px;
+            background-color: @link-text-color;
+            color: #fff;
+            font-size: 11px;
+            line-height: 16px;
         }
     }
 
@@ -252,7 +268,8 @@ body {
                                     flex-grow: 1;
                                 }
 
-                                #go_today, #go_options {
+                                #go_today,
+                                #go_options {
                                     display: inline-block;
                                 }
                             }
@@ -298,7 +315,7 @@ body {
                         right: 0;
                         margin-top: -15px;
                         background-color: @panel-background-color;
-                        box-shadow: 0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11);
+                        box-shadow: 0 1.6px 3.6px rgba(0, 0, 0, 0.13), 0 0.3px 0.9px rgba(0, 0, 0, 0.11);
                         padding: 10px 10px 10px 20px;
                         border-radius: 5px;
 
@@ -388,6 +405,7 @@ body {
             input:checked {
                 background-color: @link-text-color;
                 border-color: @link-text-color;
+
                 &+.dot {
                     left: 25px;
                     right: unset;
@@ -409,8 +427,8 @@ body {
         bottom: 0;
         right: 0;
         overflow: hidden;
-        background-color: rgb(0,0,0);
-        background-color: rgba(0,0,0,0.4);
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
 
         .modal-content {
             background-color: @panel-background-color;
@@ -460,4 +478,3 @@ body {
         }
     }
 }
-

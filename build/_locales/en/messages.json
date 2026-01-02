@@ -64,6 +64,9 @@
     "options_display_time_before_title": {
         "message": "Display time before title"
     },
+    "options_show_visit_count": {
+        "message": "Show visit count"
+    },
     "options_popup_nb_items": {
         "message": "Number of items in popup"
     }

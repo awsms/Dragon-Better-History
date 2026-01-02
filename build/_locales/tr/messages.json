@@ -17,9 +17,9 @@
 	"btn_save": {
 		"message": "Kaydet"
 	},
-    "btn_options": {
-        "message": "Seçenekler"
-    },
+	"btn_options": {
+		"message": "Seçenekler"
+	},
 	"search_placeholder": {
 		"message": "Geçmişte ara"
 	},
@@ -64,7 +64,10 @@
 	"options_display_time_before_title": {
 		"message": "Saat başlığın önünde gösterilsin"
 	},
-    "options_popup_nb_items": {
-        "message": "Açılır penceredeki öğe sayısı"
-    }
+	"options_show_visit_count": {
+		"message": "Ziyaret sayısını göster"
+	},
+	"options_popup_nb_items": {
+		"message": "Açılır penceredeki öğe sayısı"
+	}
 }

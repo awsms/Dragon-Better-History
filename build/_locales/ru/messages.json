@@ -64,6 +64,9 @@
     "options_display_time_before_title": {
         "message": "Показывать время перед заголовком"
     },
+    "options_show_visit_count": {
+        "message": "Показывать количество посещений"
+    },
     "options_popup_nb_items": {
         "message": "Количество записей в всплывающем окне"
     }
