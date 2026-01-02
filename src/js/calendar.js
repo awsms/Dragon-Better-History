@@ -262,13 +262,13 @@
                             e.preventDefault();
                             timeNowLocal.subtract(1, "months");
                             if(parseInt(timeNowLocal.format("YYYY")) < fromYear) {
-                                timeNowLocal.add("months", 1);
+                                timeNowLocal.add(1, "months");
                             }
                             removeHTML();
                         });
                         $next.on("click", function(e){
                             e.preventDefault();
-                            timeNowLocal.add("months", 1);
+                            timeNowLocal.add(1, "months");
                             if(parseInt(timeNowLocal.format("YYYY")) > toYear) {
                                 timeNowLocal.subtract(1, "months");
                             }
