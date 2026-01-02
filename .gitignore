@@ -1,1 +1,7 @@
 .idea
+
+/build/assets/application.css
+/build/assets/application.js
+
+/src/js/compiled/history.js
+/src/js/compiled/calendar.js
