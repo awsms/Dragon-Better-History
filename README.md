@@ -1,32 +1,52 @@
 # Dragon-Better-History
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://ko-fi.com/dragonofmercy)
+Better history for Chromium-based browsers.
 
-Better history for Microsoft Edge Chromium
+## Build
 
-## How to compile less
+### On Linux
 
-Compile all less files with  
+Install the tools globally (any Node package manager is fine). You need:
+- `lessc` with `less-plugin-clean-css`
+- `terser`
+
+Example with npm:
 ```sh
-less $ProjectFileDir$/src/css/history.less $ProjectFileDir$/build/assets/application.css --clean-css="--s0 --advanced
+npm i -g less less-plugin-clean-css terser
 ```
 
-## How to compile javascript
-
-Compile all javascript files to the compile folder using this command:  
+Then build or watch:
 ```sh
-terser $FileName$ --output compiled/$FileNameWithoutExtension$.js --comments false
+./run-build.sh
+./run-watch.sh
 ```
+___
 
-Then execute in powershell merge all file into a single javascript file:  
+### On Windows
+
+Install the same tools globally:
 ```pwsh
-powershell Get-Content .\src\js\_merge.txt | foreach { Get-Content .\src\js\compiled\$_ } | Set-Content .\build\assets\application.js
+npm i -g less less-plugin-clean-css terser
 ```
 
-If you need to add more javascript file don't forget to add it inside "_merge.txt" file.
+Build outputs:
+```pwsh
+# CSS
+lessc .\src\css\history.less .\build\assets\application.css --clean-css="--s0 --advanced"
 
-## 
+# JS (compile each file to src/js/compiled)
+terser .\src\js\<name>.js --output .\src\js\compiled\<name>.js --comments false
 
-If this project help to increase your productivity, you can give me a cup of coffee :) 
+# Merge in the order listed in _merge.txt
+Get-Content .\src\js\_merge.txt | ForEach-Object { Get-Content .\src\js\compiled\$_ } | Set-Content .\build\assets\application.js
+```
+___
 
-[![Donate](https://cdn.ko-fi.com/cdn/kofi2.png?v=3)](https://ko-fi.com/dragonofmercy)
+Note: If you add new JavaScript files, update `src/js/_merge.txt` so they are included in the bundle.
+
+## Install
+
+1) Open `chrome://extensions/`
+2) Enable **Developer mode**
+3) Click **Load unpacked**
+4) Select the `build/` folder
