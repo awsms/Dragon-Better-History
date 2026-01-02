@@ -245,7 +245,7 @@ var application = {
      * @param {int} [nb_entries]
      */
     historyGetDay: function(day, nb_entries){
-        nb_entries = nb_entries || 0;
+        nb_entries = nb_entries === undefined ? 0 : parseInt(nb_entries, 10) || 0;
 
         if(day > this.now){
             return;
@@ -255,7 +255,7 @@ var application = {
         let date_end = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 23, 59, 59);
 
         this.clearContent();
-        this.historyQuery('', date_start, date_end, parseInt(nb_entries));
+        this.historyQuery('', date_start, date_end, nb_entries);
     },
 
     /**
@@ -269,7 +269,12 @@ var application = {
     historyQuery: function(search, start, end, nb_entries){
         let $this = this;
         this.isLoading = true;
-        chrome.history.search({ text: search, startTime: start.getTime(), endTime: end.getTime(), maxResults: nb_entries }, function(results){
+        let query = { text: search, startTime: start.getTime(), endTime: end.getTime() };
+        if(nb_entries > 0){
+            query.maxResults = nb_entries;
+        }
+
+        chrome.history.search(query, function(results){
             $this.historyCallback(results, start, end);
         });
     },
