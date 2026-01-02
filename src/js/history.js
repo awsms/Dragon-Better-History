@@ -157,6 +157,9 @@ var application = {
                 $this.controlPressed = true;
             } else if (e.which == 16){
                 $this.majPressed = true;
+            } else if ((e.ctrlKey || e.metaKey) && e.which == 70) {
+                e.preventDefault();
+                $('#search_input').focus();
             } else {
                 $this.keypressMulti(e);
             }
